@@ -12,6 +12,7 @@ from .routers import classes as classes_router
 from .routers import bookings as bookings_router
 from .routers import workouts as workouts_router
 from .routers import payments as payments_router
+from .routers import notifications as notifications_router
 
 settings = get_settings()
 
@@ -30,6 +31,7 @@ app = FastAPI(
         {"name": "Bookings", "description": "Class bookings with capacity enforcement"},
         {"name": "Workouts", "description": "Workout assignment and tracking for members"},
         {"name": "Payments", "description": "Payment creation, webhooks, and histories"},
+        {"name": "Notifications", "description": "Email and SMS notifications (test and logs)"},
     ],
 )
 
@@ -76,3 +78,4 @@ app.include_router(classes_router.router)
 app.include_router(bookings_router.router)
 app.include_router(workouts_router.router)
 app.include_router(payments_router.router)
+app.include_router(notifications_router.router)

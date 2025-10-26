@@ -88,8 +88,8 @@ def _to_item(p: Payments) -> PaymentItem:
     "/create-checkout",
     summary="Create a checkout session or payment intent (stub)",
     description=(
-        "Creates a payment intent/checkout session. If STRIPE_SECRET_KEY is not set, "
-        "returns stubbed values suitable for UI development."
+        "Creates a payment intent/checkout session. "
+        "If STRIPE_SECRET_KEY is unset, returns stubbed values for UI development."
     ),
     response_model=CreateCheckoutResponse,
 )
