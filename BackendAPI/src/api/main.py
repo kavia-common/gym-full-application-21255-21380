@@ -6,6 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from .config import get_settings
 from .db import engine
 from . import models  # Ensure models are imported so metadata is available
+from .routers import auth as auth_router
 
 settings = get_settings()
 
@@ -15,6 +16,7 @@ app = FastAPI(
     description="Backend API for the Gym Full Application. Provides authentication, scheduling, booking, workouts, and payments.",
     openapi_tags=[
         {"name": "Health", "description": "Service health and diagnostics"},
+        {"name": "Authentication", "description": "Register, login, token refresh, logout, and user profile"},
     ],
 )
 
@@ -52,3 +54,7 @@ def on_startup() -> None:
 def health_check():
     """Health endpoint used by probes and monitoring to verify service is up."""
     return {"status": "ok"}
+
+
+# Include Routers
+app.include_router(auth_router.router)
