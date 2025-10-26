@@ -10,6 +10,7 @@ from .routers import auth as auth_router
 from .routers import users as users_router
 from .routers import classes as classes_router
 from .routers import bookings as bookings_router
+from .routers import workouts as workouts_router
 
 settings = get_settings()
 
@@ -26,6 +27,7 @@ app = FastAPI(
         {"name": "Users", "description": "User self-profile and admin user management"},
         {"name": "Classes", "description": "Create, manage, and list gym classes"},
         {"name": "Bookings", "description": "Class bookings with capacity enforcement"},
+        {"name": "Workouts", "description": "Workout assignment and tracking for members"},
     ],
 )
 
@@ -70,3 +72,4 @@ app.include_router(auth_router.router)
 app.include_router(users_router.router)
 app.include_router(classes_router.router)
 app.include_router(bookings_router.router)
+app.include_router(workouts_router.router)
