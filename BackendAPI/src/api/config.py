@@ -15,7 +15,7 @@ Environment variables required:
 from functools import lru_cache
 from typing import List
 
-from pydantic import AnyUrl, Field, ValidationError
+from pydantic import Field, ValidationError
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -27,10 +27,19 @@ class AppSettings(BaseSettings):
     APP_ENV: str = Field(default="development", description="Application environment")
 
     # Database
-    DATABASE_URL: str = Field(..., description="SQLAlchemy DSN for Postgres, e.g., postgresql+psycopg://user:pass@host:port/db")
+    DATABASE_URL: str = Field(
+        ...,
+        description=(
+            "SQLAlchemy DSN for Postgres, e.g., "
+            "postgresql+psycopg://user:pass@host:port/db"
+        ),
+    )
 
     # CORS
-    CORS_ALLOW_ORIGINS: str = Field(default="http://localhost:3000", description="Comma-separated list of allowed CORS origins")
+    CORS_ALLOW_ORIGINS: str = Field(
+        default="http://localhost:3000",
+        description="Comma-separated list of allowed CORS origins",
+    )
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", case_sensitive=False)
 

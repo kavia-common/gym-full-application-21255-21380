@@ -57,7 +57,12 @@ class RefreshRequest(BaseModel):
 
 
 class LogoutRequest(BaseModel):
-    refresh_token: Optional[str] = Field(None, description="Refresh token to revoke. If omitted, all user's tokens are revoked.")
+    refresh_token: Optional[str] = Field(
+        None,
+        description=(
+            "Refresh token to revoke. If omitted, all user's tokens are revoked."
+        ),
+    )
 
 
 def _user_visible(user: Users) -> dict:
@@ -104,7 +109,7 @@ def register(payload: RegisterRequest, db: Session = Depends(get_db)) -> TokenPa
         access_token=access,
         refresh_token=refresh,
         token_type="bearer",
-        expires_in=int((access_exp - access_exp.replace(hour=access_exp.hour)).total_seconds()) if False else 60 * 15,
+        expires_in=60 * 15,
     )
 
 
@@ -112,7 +117,9 @@ def register(payload: RegisterRequest, db: Session = Depends(get_db)) -> TokenPa
 @router.post(
     "/login",
     summary="Login",
-    description="Authenticates a user and returns a new access/refresh token pair.",
+    description=(
+        "Authenticates a user and returns a new access/refresh token pair."
+    ),
     response_model=TokenPairResponse,
 )
 def login(payload: LoginRequest, db: Session = Depends(get_db)) -> TokenPairResponse:
@@ -140,7 +147,9 @@ def login(payload: LoginRequest, db: Session = Depends(get_db)) -> TokenPairResp
 @router.post(
     "/refresh",
     summary="Refresh access token",
-    description="Rotates the refresh token (blacklisting the old one) and returns a new token pair.",
+    description=(
+        "Rotates the refresh token (blacklisting the old one) and returns a new token pair."
+    ),
     response_model=TokenPairResponse,
 )
 def refresh_tokens(payload: RefreshRequest, db: Session = Depends(get_db)) -> TokenPairResponse:
@@ -172,7 +181,10 @@ def refresh_tokens(payload: RefreshRequest, db: Session = Depends(get_db)) -> To
 @router.post(
     "/logout",
     summary="Logout",
-    description="Revokes the provided refresh token or all tokens for the current user if none provided.",
+    description=(
+        "Revokes the provided refresh token or all tokens for the current user "
+        "if none provided."
+    ),
 )
 def logout(
     payload: LogoutRequest,

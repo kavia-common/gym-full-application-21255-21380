@@ -7,16 +7,21 @@ from .config import get_settings
 from .db import engine
 from . import models  # Ensure models are imported so metadata is available
 from .routers import auth as auth_router
+from .routers import users as users_router
 
 settings = get_settings()
 
 app = FastAPI(
     title=settings.APP_NAME,
     version=settings.APP_VERSION,
-    description="Backend API for the Gym Full Application. Provides authentication, scheduling, booking, workouts, and payments.",
+    description=(
+        "Backend API for the Gym Full Application. Provides authentication, scheduling, "
+        "booking, workouts, and payments."
+    ),
     openapi_tags=[
         {"name": "Health", "description": "Service health and diagnostics"},
         {"name": "Authentication", "description": "Register, login, token refresh, logout, and user profile"},
+        {"name": "Users", "description": "User self-profile and admin user management"},
     ],
 )
 
@@ -58,3 +63,4 @@ def health_check():
 
 # Include Routers
 app.include_router(auth_router.router)
+app.include_router(users_router.router)

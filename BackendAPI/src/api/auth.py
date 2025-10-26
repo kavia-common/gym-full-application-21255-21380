@@ -4,7 +4,7 @@ refresh token persistence and rotation, and FastAPI dependencies for current use
 """
 
 from datetime import datetime, timedelta, timezone
-from typing import Any, Dict, Optional, Tuple, Callable, List
+from typing import Any, Dict, Tuple, Callable, List
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -46,8 +46,10 @@ class JWTSettings(BaseModel):
         - JWT_ISSUER (optional)
         - JWT_AUDIENCE (optional)
         """
-        # AppSettings doesn't define these explicitly; use getattr with defaults by reading from environment via BaseSettings behavior
-        # We'll piggy-back on settings.model_extra or environment directly; to keep simple, use os.getenv fallbacks.
+        # AppSettings doesn't define these explicitly; use getattr with defaults by
+        # reading from environment via BaseSettings behavior. We'll piggy-back on
+        # settings.model_extra or environment directly; to keep simple, use
+        # os.getenv fallbacks.
         import os
 
         secret = os.getenv("SECRET_KEY")

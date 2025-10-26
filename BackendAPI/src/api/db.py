@@ -7,7 +7,6 @@ Creates the SQLAlchemy Engine using the DATABASE_URL from settings and exposes:
 - engine: configured SQLAlchemy engine
 """
 
-from contextlib import contextmanager
 from typing import Generator
 
 from sqlalchemy import create_engine
