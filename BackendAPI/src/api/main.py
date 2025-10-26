@@ -13,6 +13,7 @@ from .routers import bookings as bookings_router
 from .routers import workouts as workouts_router
 from .routers import payments as payments_router
 from .routers import notifications as notifications_router
+from .routers import reports as reports_router
 
 settings = get_settings()
 
@@ -32,6 +33,7 @@ app = FastAPI(
         {"name": "Workouts", "description": "Workout assignment and tracking for members"},
         {"name": "Payments", "description": "Payment creation, webhooks, and histories"},
         {"name": "Notifications", "description": "Email and SMS notifications (test and logs)"},
+        {"name": "Reports", "description": "Admin-only reporting and CSV exports"},
     ],
 )
 
@@ -79,3 +81,4 @@ app.include_router(bookings_router.router)
 app.include_router(workouts_router.router)
 app.include_router(payments_router.router)
 app.include_router(notifications_router.router)
+app.include_router(reports_router.router)

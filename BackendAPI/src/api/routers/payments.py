@@ -243,7 +243,11 @@ async def stripe_webhook(
         return {"status": "ok", "processed": False, "reason": "payment reference not found"}
 
     if new_status and row.status != new_status:
-        db.execute(update(Payments).where(Payments.id == row.id).values(status=new_status))
+        db.execute(
+            update(Payments)
+            .where(Payments.id == row.id)
+            .values(status=new_status)
+        )
         db.commit()
 
     return {"status": "ok", "processed": True, "event_type": event_type, "reference": reference}
@@ -305,7 +309,13 @@ def admin_payments(
 
     total = int(db.execute(cnt).scalar_one() or 0)
     offset = (page - 1) * page_size
-    rows = db.execute(
-        stmt.order_by(Payments.created_at.desc(), Payments.id.desc()).offset(offset).limit(page_size)
-    ).scalars().all()
+    rows = (
+        db.execute(
+            stmt.order_by(Payments.created_at.desc(), Payments.id.desc())
+            .offset(offset)
+            .limit(page_size)
+        )
+        .scalars()
+        .all()
+    )
     return PaymentsListResponse(total=total, items=[_to_item(p) for p in rows])
