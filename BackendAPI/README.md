@@ -4,21 +4,25 @@ FastAPI backend for the Gym Full Application.
 
 ## Quick start
 
-1. Create and populate a .env file (see .env.example)
-
+1. Create and populate a .env file (see .env.example for all required/optional variables)
 2. Install dependencies:
    pip install -r requirements.txt
-
 3. Run:
    uvicorn src.api.main:app --reload
 
-The app exposes a health endpoint at GET / and enables CORS for http://localhost:3000 by default.
+Health: GET / returns {"status":"ok"} and lists allowed CORS origins.
+
+CORS: By default allows http://localhost:3000. Set CORS_ALLOW_ORIGINS if your frontend runs elsewhere.
 
 ## Configuration
 
-Config uses Pydantic BaseSettings (see src/api/config.py). Required:
-- DATABASE_URL: Postgres DSN (e.g., postgresql+psycopg://user:pass@localhost:5000/db)
-- CORS_ALLOW_ORIGINS: defaults to http://localhost:3000
+Uses Pydantic BaseSettings (see src/api/config.py) and environment variables (.env). Required for smoke tests:
+- DATABASE_URL: Postgres DSN (e.g., postgresql+psycopg://user:pass@localhost:5432/db)
+- SECRET_KEY: required for JWT signing
+- CORS_ALLOW_ORIGINS: defaults to http://localhost:3000; include your frontend origin if different
+
+Optional (Payments stub works without these):
+- STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET
 
 Optional (Notifications):
 - SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_FROM  (email via SMTP)
@@ -27,8 +31,11 @@ Optional (Notifications):
 Notes:
 - If notification credentials are not set, the API gracefully no-ops and returns stubbed messages.
 - Endpoints:
-  - POST /notifications/test  (send test email to current user's email; optional SMS to provided phone)
-  - GET  /notifications/mine  (list notification attempts; uses DB table notification_logs if present, else stub memory)
+  - POST /notifications/test  (succeeds with no-op when credentials absent)
+  - GET  /notifications/mine  (lists attempts; uses DB table notification_logs if present, else in-memory stub)
+- Payments:
+  - POST /payments/create-checkout returns deterministic stub session_id/client_secret when Stripe keys are absent
+  - POST /payments/webhook accepts unsigned payloads in test mode (no webhook secret)
 
 ## Database
 

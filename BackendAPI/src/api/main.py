@@ -95,7 +95,31 @@ async def on_shutdown() -> None:
 @app.get("/", tags=["Health"], summary="Health check", description="Returns service health status.")
 def health_check():
     """Health endpoint used by probes and monitoring to verify service is up."""
-    return {"status": "ok"}
+    return {
+        "status": "ok",
+        "cors_allowed_origins": settings.allowed_origins_list(),
+    }
+
+
+# PUBLIC_INTERFACE
+@app.get(
+    "/docs/websocket",
+    tags=["Health"],
+    summary="WebSocket usage note",
+    description=(
+        "This project does not expose WebSocket endpoints. All communication is REST over HTTP. "
+        "This route documents that explicitly for API consumers."
+    ),
+)
+def websocket_usage_note() -> dict:
+    """
+    WebSocket documentation helper.
+    Returns a short message indicating that no WebSocket endpoints are currently used.
+    """
+    return {
+        "websocket": False,
+        "note": "No WebSocket endpoints are available. Use HTTP REST endpoints as documented in OpenAPI.",
+    }
 
 
 # Include Routers
