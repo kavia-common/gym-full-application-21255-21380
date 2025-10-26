@@ -134,6 +134,8 @@ class Payments(Base):
     currency: Mapped[str] = mapped_column(String(10), nullable=False, default="USD")
     status: Mapped[str] = mapped_column(String(32), nullable=False, default=PaymentStatusEnum.PENDING.value)
     reference: Mapped[str] = mapped_column(String(255), nullable=False, unique=True)
+    # Optional external provider session/intent id (e.g., Stripe checkout session or payment_intent)
+    provider_session_id: Mapped[Optional[str]] = mapped_column(String(255), nullable=True, index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=datetime.utcnow)
 
     # Relationships

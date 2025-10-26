@@ -13,7 +13,7 @@ Environment variables required:
 """
 
 from functools import lru_cache
-from typing import List
+from typing import List, Optional
 
 from pydantic import Field, ValidationError
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -40,6 +40,10 @@ class AppSettings(BaseSettings):
         default="http://localhost:3000",
         description="Comma-separated list of allowed CORS origins",
     )
+
+    # Payments (optional; used when integrating with Stripe)
+    STRIPE_SECRET_KEY: Optional[str] = Field(default=None, description="Stripe secret key")
+    STRIPE_WEBHOOK_SECRET: Optional[str] = Field(default=None, description="Stripe webhook signing secret")
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", case_sensitive=False)
 
