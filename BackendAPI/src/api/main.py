@@ -14,6 +14,7 @@ from .routers import workouts as workouts_router
 from .routers import payments as payments_router
 from .routers import notifications as notifications_router
 from .routers import reports as reports_router
+from .scheduler import scheduler_lifespan  # Scheduler lifecycle
 
 settings = get_settings()
 
@@ -48,11 +49,12 @@ app.add_middleware(
 
 
 @app.on_event("startup")
-def on_startup() -> None:
+async def on_startup() -> None:
     """
     App startup hook:
     - Validates database connectivity.
-    - Optionally can create tables in development environments.
+    - Optionally creates tables in development environments.
+    - Starts the reminder scheduler.
     """
     try:
         with engine.connect() as conn:
@@ -64,6 +66,29 @@ def on_startup() -> None:
     # For scaffolding purposes only: create tables if they don't exist (dev convenience)
     if settings.APP_ENV.lower() in ("development", "dev", "local"):
         models.Base.metadata.create_all(bind=engine)
+
+    # Start scheduler
+    # Use the async context manager to start then keep it running; since FastAPI's
+    # on_event doesn't maintain the context across app lifetime, we start it here
+    # and store the context manager on app.state to stop on shutdown.
+    app.state._scheduler_ctx = scheduler_lifespan()
+    await app.state._scheduler_ctx.__aenter__()
+
+
+@app.on_event("shutdown")
+async def on_shutdown() -> None:
+    """
+    App shutdown hook:
+    - Stops the reminder scheduler cleanly.
+    """
+    ctx = getattr(app.state, "_scheduler_ctx", None)
+    if ctx is not None:
+        try:
+            await ctx.__aexit__(None, None, None)
+        except Exception:
+            pass
+        finally:
+            app.state._scheduler_ctx = None
 
 
 # PUBLIC_INTERFACE

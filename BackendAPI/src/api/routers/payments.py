@@ -101,7 +101,8 @@ def create_checkout(
     """
     Creates a Payments row and returns provider identifiers.
 
-    - With STRIPE_SECRET_KEY present: returns a dummy session_id/client_secret placeholder to be replaced in full integration.
+    - With STRIPE_SECRET_KEY present: returns a dummy session_id/client_secret placeholder
+      to be replaced in full integration.
     - Without keys: returns deterministic placeholders for development.
     """
     amount = round(float(payload.amount), 2)

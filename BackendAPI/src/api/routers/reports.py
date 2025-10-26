@@ -306,7 +306,13 @@ def export_csv(
         rows = [tuple(r) for r in data]
 
     else:
-        raise HTTPException(status_code=400, detail="Unsupported export type. Use one of: users, classes, bookings, workouts, payments.")
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                "Unsupported export type. Use one of: users, classes, bookings, "
+                "workouts, payments."
+            ),
+        )
 
     csv_text = _csv_from_rows(headers, rows)
 
